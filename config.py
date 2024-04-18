@@ -1,6 +1,7 @@
 import os
 from typing import Union
 import re
+from datetime import date
 from dotenv import load_dotenv
 
 #tem que redefinir aqui para nao dar import circular
@@ -27,7 +28,8 @@ def load_env_var(varname:str, type:any=None)->Union[int, float, str]:
 
     try:
         var = os.environ[varname]
-        if type is not None:
+        var = None if var=='' else var
+        if (type is not None) and (var is not None):
             try:
                 var = type(var)
             except ValueError:
@@ -54,3 +56,10 @@ PROC_REGEX_PATT=re.compile(load_env_var('PROC_REGEX_PATT'))
 SHEET_NAME=load_env_var('SHEET_NAME')
 ROWS_TO_SKIP=load_env_var('ROWS_TO_SKIP', int)
 COL_PROC_REGEX_PATT=load_env_var('COL_PROC_REGEX_PATT')
+
+#anos
+ANO_INICIAL=load_env_var('ANO_INICIAL', int)
+ANO_FINAL=load_env_var('ANO_FINAL', int) or date.today().year
+
+#flags
+SUCCESS='Ok'

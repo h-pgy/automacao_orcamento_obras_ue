@@ -5,11 +5,10 @@ from core.exceptions.xl import ColunaDadosNaoEncontrada
 from core.utils.str import remover_acentos
 from core.parsers import parse_proc_num
 
-from config import COL_PROC_REGEX_PATT
+from config import COL_PROC_REGEX_PATT, SUCCESS
 
 COL_STATUS_PROC_PARSE='status_parseamento_processo'
 COL_PARSED_PROC='processo_extraido'
-SUCCESS='Ok'
 
 class GetProcNum:
 
@@ -51,7 +50,8 @@ class GetProcNum:
             df.loc[i, COL_PARSED_PROC]=parsed_proc
             df.loc[i, COL_STATUS_PROC_PARSE]=SUCCESS
         except Exception as e:
-            df.loc[i, COL_STATUS_PROC_PARSE]=f'Erro: {str(e)}'
+            df.loc[i, COL_PARSED_PROC]=None
+            df.loc[i, COL_STATUS_PROC_PARSE]=f'Erro: {str(type(e).__name__)} - {str(e)}'
 
     def __parse_procs(self, df:DataFrame)->None:
 
