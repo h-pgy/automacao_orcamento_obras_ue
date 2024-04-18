@@ -53,4 +53,4 @@ PROC_REGEX_PATT=re.compile(load_env_var('PROC_REGEX_PATT'))
 #configs de leitura do excel
 SHEET_NAME=load_env_var('SHEET_NAME')
 ROWS_TO_SKIP=load_env_var('ROWS_TO_SKIP', int)
-COL_PROC_REGEX_PATT=load_env_var('ROWS_TO_SKIP')
+COL_PROC_REGEX_PATT=load_env_var('COL_PROC_REGEX_PATT')

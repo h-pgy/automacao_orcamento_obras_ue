@@ -50,11 +50,11 @@ class ParseProcNum:
 
         if len(parsed_clean) < 1:
             raise ProcessoForadoPadrao(f'Nenhum processo no formato encontrado. Valor original: {proc_str}')
-        if len(parsed_clean>1):
+        if len(parsed_clean)>1:
             raise ProcessoForadoPadrao(f'Foi encontrado mais de um processo. Processos encontrados: {parsed_clean}')
 
 
-    def __pipeline(self, proc_str:str)->List[str]:
+    def __pipeline(self, proc_str:str)->str:
 
         proc_str = str(proc_str)
         parsed_raw = self.__parse(proc_str)
@@ -63,7 +63,7 @@ class ParseProcNum:
         parsed_clean = [self.__clean_processo(proc) for proc in extracted]
         self.__check_qtd_procs(parsed_clean, proc_str)
 
-        return parsed_clean
+        return parsed_clean[0]
     
 
     def __call__(self, proc_str:str)->List[str]:
