@@ -44,8 +44,9 @@ class EmpenhosApiSof:
         mes = self.__solve_month(ano)
 
         resp = self.__get_empenhos_by_proc(num_proc, mes, ano)
-        if len(resp)<1:
+        if resp is None or len(resp)<1:
             raise EmpenhoInexistente(f'Não há empenhos para o proc {num_proc} em {mes}/{ano}')
+        return resp
     
     def __call__(self, num_proc:int, ano:int)->List[dict]:
 
