@@ -1,9 +1,9 @@
 from pandas import DataFrame, Series
 import re
 
-from ..exceptions.xl import ColunaDadosNaoEncontrada
-from ..utils.str import remover_acentos
-from ..parsers import parse_proc_num
+from core.exceptions.xl import ColunaDadosNaoEncontrada
+from core.utils.str import remover_acentos
+from core.parsers import parse_proc_num
 
 from config import COL_PROC_REGEX_PATT
 
