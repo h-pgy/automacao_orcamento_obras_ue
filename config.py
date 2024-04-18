@@ -38,6 +38,9 @@ def load_env_var(varname:str, type:any=None)->Union[int, float, str]:
     
 load_env()
 
+#diretorios
+ORIGINAL_DATA_DIR = load_env_var('ORIGINAL_DATA_DIR')
+GENERATED_DATA_DIR = load_env_var('GENERATED_DATA_DIR')
 
 #configs api
 SOF_API_TOKEN=load_env_var('SOF_API_TOKEN')
@@ -48,5 +51,6 @@ SOF_API_VERSION=load_env_var('SOF_API_VERSION')
 PROC_REGEX_PATT=re.compile(load_env_var('PROC_REGEX_PATT'))
 
 #configs de leitura do excel
+SHEET_NAME=load_env_var('SHEET_NAME')
 ROWS_TO_SKIP=load_env_var('ROWS_TO_SKIP', int)
 COL_PROC_REGEX_PATT=load_env_var('ROWS_TO_SKIP')
