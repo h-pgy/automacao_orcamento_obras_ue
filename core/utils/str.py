@@ -32,3 +32,12 @@ def remover_acentos(name):
     chars = list(name)
     
     return ''.join([acento_letra.get(char, char) for char in chars])
+
+
+def check_alphanum(string:str)->bool:
+
+    return any(not c.isalnum() for c in string)
+
+def check_ascii(string:str)->bool:
+
+    return string.isacii()
