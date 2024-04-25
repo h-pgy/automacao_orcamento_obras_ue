@@ -68,10 +68,12 @@ class ExtractSofData:
             return values
         #pegando apenas valores unicos
         values = list(set(values))
-        return '; '.join(values)
+        return '; '.join([str(val) for val in values])
 
     def __sum(self, values:list)->float:
 
+        if values is None:
+            return None
         try:
             values = [val if val is not None else 0 for val in values]
             return sum(values)
@@ -82,10 +84,12 @@ class ExtractSofData:
     def __extract(self, extract_method:str, resp:Union[list, None])->Union[str, float, None]:
 
         extract_func = getattr(self, extract_method)
-        if pd.isnull(resp):
+        try:
+            resp  = read_json_str(resp)
+        except TypeError:
             return None
-        
-        resp  = read_json_str(resp)
+        if type(resp)!=list:
+            return None
         return [extract_func(emp) for emp in resp]
     
     def __build_column(self, df:pd.DataFrame, col_sof_data:pd.Series, col_name:str, extract_method:str, sum:bool)->None:
