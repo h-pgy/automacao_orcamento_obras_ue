@@ -6,6 +6,7 @@ from typing import Union
 from core.utils.io import solve_path
 from .get_proc_num import GetProcNum
 from .get_empenho_proc import GetEmpenhoProc
+from .extract_sof_data import ExtractSofData
 
 from config import GENERATED_DATA_DIR
 
@@ -18,6 +19,7 @@ class Transform:
         self.verbose = verbose
         self.get_proc_num = GetProcNum(verbose=verbose)
         self.get_empenhos = GetEmpenhoProc(verbose=verbose)
+        self.extract_sof_data = ExtractSofData(verbose=verbose)
 
         self.save_intermediary_df=save_intermediary_df
         self.load_intermediary = load_intermediary
@@ -30,6 +32,7 @@ class Transform:
                 if self.verbose:
                     print('Loading intermediary dataframe')
                 return pd.read_excel(path_intermediary)
+        print('Creating new dataframe pulling data from SOF')
 
     def __intermediary_pipeline(self, df:pd.DataFrame)->pd.DataFrame:
 
@@ -37,21 +40,29 @@ class Transform:
         df = self.get_empenhos(df)
         if self.save_intermediary_df:
             self.__save_df(df, ARQUIVO_INTERMEDIARIO)
+        return df
     
     def __solve_intermediary(self, df:pd.DataFrame)->Union[pd.DataFrame, None]:
 
-        df = self.__load_intermediary()
-        if df is None:
+        df_inter = self.__load_intermediary()
+        if df_inter is None:
             df = self.__intermediary_pipeline(df)
-        return df
+            return df
+        else:
+            return df_inter
 
     def __save_df(self, df:pd.DataFrame, fname:str)->None:
 
         fpath = solve_path(fname, GENERATED_DATA_DIR)
-        df.to_excel(fpath)
+        df.to_excel(fpath, index=False)
 
-    def pipeline(self, df:pd.DataFrame)->pd.DataFrame:
+    def __pipeline(self, df:pd.DataFrame)->pd.DataFrame:
 
         df = self.__solve_intermediary(df)
+        df = self.extract_sof_data(df)
 
         return df
+    
+    def __call__(self, df:pd.DataFrame)->pd.DataFrame:
+
+        return self.__pipeline(df)
