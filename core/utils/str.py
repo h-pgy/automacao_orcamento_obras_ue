@@ -1,3 +1,6 @@
+import json
+from typing import Union
+
 def remover_acentos(name):
     
     acento_letra = {
@@ -41,3 +44,8 @@ def check_alphanum(string:str)->bool:
 def check_ascii(string:str)->bool:
 
     return string.isacii()
+
+
+def read_json_str(string:str)->Union[list, dict]:
+
+    return json.loads(string)
