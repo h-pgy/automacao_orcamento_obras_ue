@@ -37,7 +37,7 @@ class GetEmpenhoProc:
 
     def __set_row_response(self, df:DataFrame, ano:int, i:int, resp_sof:Union[List[dict], None], msg:str)->None:
 
-        df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=json.dumps(resp_sof)
+        df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=json.dumps(resp_sof, ensure_ascii=False)
         df.loc[i, COL_STATUS_API_SOF.format(ano=ano)]=msg
 
     def __set_row_data(self, row:Series, ano:int, i:int, df:DataFrame)->None:

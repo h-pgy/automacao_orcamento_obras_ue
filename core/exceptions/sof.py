@@ -8,3 +8,6 @@ class RespError(RuntimeError):
 
 class EmpenhoInexistente(RuntimeError):
     pass
+
+class RespDataError(ValueError):
+    pass
