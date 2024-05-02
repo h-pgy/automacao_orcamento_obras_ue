@@ -7,6 +7,7 @@ from core.utils.io import solve_path
 from .get_proc_num import GetProcNum
 from .get_empenho_proc import GetEmpenhoProc
 from .extract_sof_data import ExtractSofData
+from .aggregate_values import Agregator
 
 from config import GENERATED_DATA_DIR
 
@@ -20,6 +21,7 @@ class Transform:
         self.get_proc_num = GetProcNum(verbose=verbose)
         self.get_empenhos = GetEmpenhoProc(verbose=verbose)
         self.extract_sof_data = ExtractSofData(verbose=verbose)
+        self.agregador = Agregator(verbose=verbose)
 
         self.save_intermediary_df=save_intermediary_df
         self.load_intermediary = load_intermediary
@@ -60,6 +62,8 @@ class Transform:
 
         df = self.__solve_intermediary(df)
         df = self.extract_sof_data(df)
+        df = self.agregador.somar_empenho(df)
+        df = self.agregador.somar_liquidado(df)
 
         return df
     
