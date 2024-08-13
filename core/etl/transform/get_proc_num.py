@@ -27,6 +27,7 @@ class GetProcNum:
     
     def __clean_col(self, col:str)->str:
 
+        col = str(col)
         col = col.lower().rstrip().lstrip()
         col = remover_acentos(col)
 

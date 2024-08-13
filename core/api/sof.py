@@ -1,6 +1,7 @@
 from .client.rest_client import RestClient
 
 from core.utils.date import is_current_year, current_month
+from core.utils.misc import list_envelope
 from core.exceptions.sof import RespError, EmpenhoInexistente
 
 from config import SOF_API_HOST, SOF_API_TOKEN, SOF_API_VERSION
@@ -18,6 +19,7 @@ class EmpenhosApiSof:
 
         self.client = RestClient(SOF_API_HOST, SOF_API_TOKEN)
 
+    @list_envelope
     def __get_empenhos_by_proc(self, num_proc:int, mes:int, ano:int)->List[dict]:
 
         api_resp = self.client.get(self.version, 

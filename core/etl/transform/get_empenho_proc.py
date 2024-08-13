@@ -2,6 +2,7 @@ from pandas import DataFrame, Series
 import re
 from tqdm import tqdm
 import json
+from typing import List, Union
 
 from core.exceptions.xl import ColunaDadosNaoEncontrada
 from core.utils.str import remover_acentos
@@ -34,20 +35,28 @@ class GetEmpenhoProc:
 
         return df
 
+    def __set_row_response(self, df:DataFrame, ano:int, i:int, resp_sof:Union[List[dict], None], msg:str)->None:
+
+        df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=json.dumps(resp_sof, ensure_ascii=False)
+        df.loc[i, COL_STATUS_API_SOF.format(ano=ano)]=msg
+
+    def __set_row_data(self, row:Series, ano:int, i:int, df:DataFrame)->None:
+
+        if row[COL_STATUS_PROC_PARSE]==SUCCESS:
+            proc = row[COL_PARSED_PROC]
+            resp_sof = self.__get_empenho(proc, ano)
+            self.__set_row_response(df, ano, i, resp_sof, SUCCESS)
+        else:
+            msg = f'Erro no número do processo'
+            self.__set_row_response(df, ano, i, None, msg)
+
     def __get_empenho_row(self, ano:int, i:int, row:Series, df:DataFrame)->None:
 
         try:
-            if row[COL_STATUS_PROC_PARSE]==SUCCESS:
-                proc = row[COL_PARSED_PROC]
-                resp_sof = self.__get_empenho(proc, ano)
-                df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=json.dumps(resp_sof)
-                df.loc[i, COL_STATUS_API_SOF.format(ano=ano)]=SUCCESS
-            else:
-                df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=None
-                df.loc[i, COL_STATUS_API_SOF.format(ano=ano)]=f'Erro no número do processo'
+            self.__set_row_data(row, ano, i, df)
         except Exception as e:
-            df.loc[i, COL_RETORNO_SOF.format(ano=ano)]=None
-            df.loc[i, COL_STATUS_API_SOF.format(ano=ano)]=f'Erro: {str(type(e).__name__)} - {str(e)}'
+            msg = f'Erro: {str(type(e).__name__)} - {str(e)}'
+            self.__set_row_response(df, ano, i, None, msg)
 
     def __get_empenhos(self, ano:int, df:DataFrame)->None:
 
