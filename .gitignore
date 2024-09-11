@@ -1,6 +1,7 @@
 #proj specific ignores
 original_data/
 generated_data/
+generated_data_stach/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

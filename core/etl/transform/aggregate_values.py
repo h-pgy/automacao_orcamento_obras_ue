@@ -27,6 +27,8 @@ class Agregator:
 
         df = df.copy()
         cols_empenho = [col for col in df.columns if re.match(REGEX_COL_EMPENHO, col)]
+        for col in cols_empenho:
+            df[col] =  pd.to_numeric(df[col], errors='coerce').fillna(0)
         df['empenho_total'] = self.__agregar_sum(df, cols_empenho)
 
         return df
@@ -38,6 +40,8 @@ class Agregator:
 
         df = df.copy()
         cols_liquidado = [col for col in df.columns if re.match(REGEX_COL_LIQUIDADO, col)]
+        for col in cols_liquidado:
+            df[col] =  pd.to_numeric(df[col], errors='coerce').fillna(0)
         df['valor_liquidado_total'] = self.__agregar_sum(df, cols_liquidado)
 
         return df

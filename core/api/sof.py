@@ -11,6 +11,8 @@ from typing import List
 #mes padrao é dezembro pois sof é cumulativo
 MES_PADRAO=12
 
+MAX_RETRIES=50
+
 class EmpenhosApiSof:
 
     version = SOF_API_VERSION
@@ -20,7 +22,7 @@ class EmpenhosApiSof:
         self.client = RestClient(SOF_API_HOST, SOF_API_TOKEN)
 
     @list_envelope
-    def __get_empenhos_by_proc(self, num_proc:int, mes:int, ano:int)->List[dict]:
+    def __get_empenhos_by_proc(self, num_proc:int, mes:int, ano:int, retries:int=0)->List[dict]:
 
         api_resp = self.client.get(self.version, 
                                    endpoint='empenhos', 
@@ -28,9 +30,14 @@ class EmpenhosApiSof:
                                    mesEmpenho=mes,
                                    numProcesso=num_proc
                                    )
-        status = api_resp['metadados']['txtStatus']
+        #mudou o nome do parametro
+        status = api_resp['metaDados']['txtStatus']
         if status!='OK':
-            raise RespError(f'Erro na resposta da API do SOF: {status}')
+            if retries < MAX_RETRIES:
+                retries +=1
+                self.__get_empenhos_by_proc(num_proc, mes, ano, retries)
+            else:
+                raise RespError(f'Erro na resposta da API do SOF: {status}')
         
         return api_resp['lstEmpenhos']
     
